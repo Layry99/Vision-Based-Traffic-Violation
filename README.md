@@ -35,6 +35,11 @@ If the image of the violating car appears too small or blurry on the home screen
 
 ![image](https://github.com/Layry99/Vision-Based-Traffic-Violation/assets/161226676/08a15fdb-345f-490c-9944-2c59e25f49e9)
 
+
 Figure 3 : Analysis and reporting 
 
 When the "Analysis and Reporting" button on the main home screen is clicked, it will display Figure 3, which shows statistics of violations within a day. The data is retrieved from the violation database. The x-axis represents the date, and the y-axis represents the number of violations detected. Over time, the system can be used to analyze traffic violation patterns and generate reports to inform decisions on road safety measures and enforcement strategies.
+
+
+For Your Information.
+This project is still in development. The software's code will be released as soon as it has been tested many times.

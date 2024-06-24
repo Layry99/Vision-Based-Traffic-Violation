@@ -3,7 +3,7 @@
 Project Overview
 
 This project utilizes YOLOv8 for car detection. Initially, it detects cars within the frame. Subsequently, a manually configured straight line is introduced into the frame. If the bounding boxes of the cars 
-is withhin this straight line for a certain amount of time, a logic is implemented to capture the images. The captured images are stored in an SQLite database. Additionally, a charts will be generated, providing useful information such as the time and the number of cars that committed violations.
+is within this straight line for a certain amount of time, a logic is implemented to capture the images. The captured images are stored in an SQLite database. Additionally, a charts will be generated, providing useful information such as the time and the number of cars that committed violations.
 
 Furthermore, this project will feature a Graphical User Interface (GUI) using PyQt5, ensuring easy access for users.
 

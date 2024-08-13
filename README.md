@@ -56,3 +56,12 @@ Overall, this webpage can be used to analyze traffic violation patterns, helping
 
 For Your Information.
 This project is still in development. The software's code will be released as soon as it has been tested many times.
+
+To run this project.
+1. Activate the virtual environment
+2. To run the main appm enter "python vision-main.py"
+3. To run the webpage, enter "uvicorn main:app --reload"
+
+
+
+

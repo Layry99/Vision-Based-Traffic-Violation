@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violation Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .content, .chart-container, .statistic-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-inline label {
+            margin-right: 10px;
+        }
+        .image-container {
+            position: relative;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .image-timestamp {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .btn-group {
+            margin-bottom: 20px;
+        }
+        .statistic-card {
+            transition: box-shadow 0.3s;
+        }
+        .statistic-card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .statistic-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .statistic-card p {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+        }
+        .no-records {
+            text-align: center;
+            color: #777;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="my-4">Violation Dashboard</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="chart-container">
+                <h3>Violations Over Time</h3>
+                {% if chart %}
+                    {{ chart|safe }}
+                {% else %}
+                    <p>No data available to display the chart.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="statistic-card text-center">
+                <h4>Total Violations</h4>
+                <p>{{ total_violations }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="statistic-card text-center">
+                <h4>Maximum Violations in a Day</h4>
+                <p>{{ max_violations }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="statistic-card text-center">
+                <h4>Minimum Violations in a Day</h4>
+                <p>{{ min_violations }}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="statistic-card text-center">
+                <h4>Average Violations per Day</h4>
+                <p>{{ "%.2f"|format(avg_violations) }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container">
+                <h3>Top Violation Hours</h3>
+                {% if top_hours_chart %}
+                    {{ top_hours_chart|safe }}
+                {% else %}
+                    <p>No data available to display the chart.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-container">
+                <h3>Top Violation Days</h3>
+                {% if top_days_chart %}
+                    {{ top_days_chart|safe }}
+                {% else %}
+                    <p>No data available to display the chart.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <form method="get" action="/" class="form-inline mb-4">
+            <div class="form-group">
+                <label for="selected_date">Select Date:</label>
+                <input type="date" id="selected_date" name="selected_date" class="form-control mx-sm-2">
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+        <div class="btn-group">
+            <a href="/?filter_type=all" class="btn btn-secondary">All</a>
+            <a href="/?filter_type=last_month" class="btn btn-secondary">Last Month</a>
+            <a href="/?filter_type=last_week" class="btn btn-secondary">Last Week</a>
+            <a href="/?filter_type=last_day" class="btn btn-secondary">Last Day</a>
+            <a href="/?filter_type=today" class="btn btn-secondary">Today</a>
+        </div>
+
+        <div class="row">
+            {% if no_records_found %}
+            <div class="col-md-12">
+                <p class="no-records">There is no record found for the selected date. Please select another date.</p>
+            </div>
+            {% else %}
+            {% for image in image_data %}
+            <div class="col-md-4">
+                <div class="image-container">
+                    <a href="/image/{{ image.id }}" target="_blank">
+                        <img src="/image/{{ image.id }}" alt="Violation Image" class="img-fluid violation-image">
+                        <div class="image-timestamp">ID: {{ image.id }}<br>Timestamp: {{ image.timestamp }}</div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
